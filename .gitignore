@@ -1,0 +1,14 @@
+/target/
+/.settings/
+/.classpath
+/.project
+/.m2/
+/config/application-local.properties
+*.log
+.env
+/app/*.war
+/.idea/
+/community-uploads/
+/logs/
+mailpit.exe
+

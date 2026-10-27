@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.japanlife.mapper.MemberMapper">
+  <sql id="memberColumns">id, login_id, password_hash, display_name, role, email, email_verified, status, created_at</sql>
+  <select id="findByLoginId" resultType="com.japanlife.dto.Member">SELECT <include refid="memberColumns"/> FROM JL_MEMBER WHERE login_id = #{loginId}</select>
+  <select id="findByEmail" resultType="com.japanlife.dto.Member">SELECT <include refid="memberColumns"/> FROM JL_MEMBER WHERE email = #{email}</select>
+  <select id="findByLoginIdAndEmail" resultType="com.japanlife.dto.Member">SELECT <include refid="memberColumns"/> FROM JL_MEMBER WHERE login_id = #{loginId} AND email = #{email}</select>
+  <select id="findById" resultType="com.japanlife.dto.Member">SELECT <include refid="memberColumns"/> FROM JL_MEMBER WHERE id = #{id}</select>
+  <select id="findAllForAdmin" resultType="com.japanlife.dto.Member">SELECT <include refid="memberColumns"/> FROM JL_MEMBER ORDER BY id DESC</select>
+  <insert id="insert" parameterType="com.japanlife.dto.Member">
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">SELECT jl_member_seq.NEXTVAL FROM DUAL</selectKey>
+    INSERT INTO JL_MEMBER (id, login_id, password_hash, display_name, role, email, email_verified) VALUES (#{id}, #{loginId}, #{passwordHash}, #{displayName}, #{role}, #{email}, #{emailVerified})
+  </insert>
+  <insert id="insertEmailVerification" parameterType="com.japanlife.dto.EmailVerification">
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">SELECT jl_email_verification_seq.NEXTVAL FROM DUAL</selectKey>
+    INSERT INTO JL_EMAIL_VERIFICATION (id, email, code_hash, expires_at, sent_at, attempt_count) VALUES (#{id}, #{email}, #{codeHash}, #{expiresAt}, #{sentAt}, 0)
+  </insert>
+  <select id="findLatestEmailVerification" resultType="com.japanlife.dto.EmailVerification">
+    SELECT id, email, code_hash, expires_at, sent_at, verified_at, attempt_count
+      FROM JL_EMAIL_VERIFICATION
+     WHERE email = #{email}
+       AND id = (SELECT MAX(id) FROM JL_EMAIL_VERIFICATION WHERE email = #{email})
+  </select>
+  <update id="markEmailVerificationVerified">UPDATE JL_EMAIL_VERIFICATION SET verified_at = #{verifiedAt} WHERE id = #{id} AND verified_at IS NULL</update>
+  <update id="incrementEmailVerificationAttempts">UPDATE JL_EMAIL_VERIFICATION SET attempt_count = attempt_count + 1 WHERE id = #{id}</update>
+  <insert id="insertPasswordReset" parameterType="com.japanlife.dto.PasswordReset">
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">SELECT jl_password_reset_seq.NEXTVAL FROM DUAL</selectKey>
+    INSERT INTO JL_PASSWORD_RESET (id, member_id, code_hash, expires_at, sent_at, attempt_count) VALUES (#{id}, #{memberId}, #{codeHash}, #{expiresAt}, #{sentAt}, 0)
+  </insert>
+  <select id="findLatestPasswordReset" resultType="com.japanlife.dto.PasswordReset">
+    SELECT id, member_id, code_hash, expires_at, sent_at, verified_at, attempt_count
+      FROM JL_PASSWORD_RESET
+     WHERE member_id = #{memberId}
+       AND id = (SELECT MAX(id) FROM JL_PASSWORD_RESET WHERE member_id = #{memberId})
+  </select>
+  <update id="incrementPasswordResetAttempts">UPDATE JL_PASSWORD_RESET SET attempt_count = attempt_count + 1 WHERE id = #{id}</update>
+  <update id="markPasswordResetVerified">UPDATE JL_PASSWORD_RESET SET verified_at = #{verifiedAt} WHERE id = #{id} AND verified_at IS NULL</update>
+  <update id="updatePasswordHash">UPDATE JL_MEMBER SET password_hash = #{passwordHash} WHERE id = #{memberId}</update>
+  <update id="updateDisplayName">UPDATE JL_MEMBER SET display_name = #{displayName} WHERE id = #{memberId}</update>
+  <update id="updateRole">UPDATE JL_MEMBER SET role = #{role} WHERE id = #{memberId}</update>
+  <update id="updateStatus">UPDATE JL_MEMBER SET status = #{status} WHERE id = #{memberId}</update>
+  <insert id="insertMemberAudit">
+    INSERT INTO JL_MEMBER_AUDIT (id, member_id, admin_member_id, action_type, previous_status, new_status, reason)
+    VALUES (jl_member_audit_seq.NEXTVAL, #{memberId}, #{adminMemberId}, #{actionType}, #{previousStatus}, #{newStatus}, #{reason})
+  </insert>
+  <select id="findAudits" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT a.id, a.member_id, a.admin_member_id, a.action_type, a.previous_status, a.new_status, a.reason, a.created_at,
+           m.login_id AS member_login_id, admin.login_id AS admin_login_id
+    FROM JL_MEMBER_AUDIT a
+    JOIN JL_MEMBER m ON m.id = a.member_id
+    JOIN JL_MEMBER admin ON admin.id = a.admin_member_id
+    ORDER BY a.created_at DESC, a.id DESC
+  </select>
+</mapper>

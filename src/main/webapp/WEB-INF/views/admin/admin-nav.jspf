@@ -1,0 +1,16 @@
+<aside class="admin-sidebar" aria-label="<fmt:message key='admin.menu'/>">
+  <a class="admin-sidebar-brand" href="<c:url value='/admin'/>"><span class="admin-sidebar-mark">J</span><span>JAPAN LIFE GUIDE<small><fmt:message key="admin.eyebrow"/></small></span></a>
+  <nav>
+    <a class="${adminSection == 'dashboard' ? 'active' : ''}" href="<c:url value='/admin'/>"><fmt:message key="admin.dashboard"/></a>
+    <a class="${adminSection == 'members' ? 'active' : ''}" href="<c:url value='/admin/members'/>"><fmt:message key="admin.members"/></a>
+    <p><fmt:message key="admin.contentGroup"/></p>
+    <a class="${adminSection == 'procedures' ? 'active' : ''}" href="<c:url value='/admin/procedures'/>"><fmt:message key="admin.procedures"/></a>
+    <a class="${adminSection == 'documents' ? 'active' : ''}" href="<c:url value='/admin/documents'/>"><fmt:message key="admin.documents"/></a>
+    <a class="${adminSection == 'steps' ? 'active' : ''}" href="<c:url value='/admin/steps'/>"><fmt:message key="admin.steps"/></a>
+    <a class="${adminSection == 'sources' ? 'active' : ''}" href="<c:url value='/admin/sources'/>"><fmt:message key="admin.sources"/></a>
+    <a class="${adminSection == 'offices' ? 'active' : ''}" href="<c:url value='/admin/offices'/>"><fmt:message key="admin.offices"/></a>
+    <p><fmt:message key="admin.communityGroup"/></p>
+    <a class="${adminSection == 'community' ? 'active' : ''}" href="<c:url value='/admin/community'/>"><fmt:message key="admin.communityPosts"/></a>
+    <a class="${adminSection == 'reports' ? 'active' : ''}" href="<c:url value='/admin/reports'/>"><fmt:message key="community.reports"/></a>
+  </nav>
+</aside>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.japanlife.mapper.AdminContentMapper">
+
+  <select id="findProcedures" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT p.id, p.title, p.summary, p.eligibility, p.deadline_text, p.method_text, p.notice,
+           p.situation, p.phase_code, p.published, p.revision, p.region_id, p.category_id,
+           r.name AS region_name, c.name AS category_name,
+           (SELECT COUNT(*) FROM JL_PROCEDURE_I18N WHERE procedure_id = p.id AND language_code = 'ko') AS has_ko,
+           (SELECT COUNT(*) FROM JL_PROCEDURE_I18N WHERE procedure_id = p.id AND language_code = 'en') AS has_en
+    FROM JL_PROCEDURE p
+    JOIN JL_REGION r ON r.id = p.region_id
+    JOIN JL_CATEGORY c ON c.id = p.category_id
+    ORDER BY p.id
+  </select>
+
+  <select id="findProcedure" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT p.id, p.title, p.summary, p.eligibility, p.deadline_text, p.method_text, p.notice,
+           p.situation, p.phase_code, p.published, p.revision, r.name AS region_name, c.name AS category_name
+    FROM JL_PROCEDURE p
+    JOIN JL_REGION r ON r.id = p.region_id
+    JOIN JL_CATEGORY c ON c.id = p.category_id
+    WHERE p.id = #{id}
+  </select>
+
+  <select id="findProcedureTranslations" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT language_code, title, summary, eligibility, deadline_text, method_text, notice
+    FROM JL_PROCEDURE_I18N
+    WHERE procedure_id = #{procedureId}
+  </select>
+
+  <select id="countProcedureTranslation" resultType="int">
+    SELECT COUNT(*) FROM JL_PROCEDURE_I18N WHERE procedure_id = #{procedureId} AND language_code = #{lang}
+  </select>
+
+  <update id="updateProcedureTranslation">
+    UPDATE JL_PROCEDURE_I18N
+    SET title = #{title}, summary = #{summary}, eligibility = #{eligibility},
+        deadline_text = #{deadline}, method_text = #{method}, notice = #{notice}
+    WHERE procedure_id = #{procedureId} AND language_code = #{lang}
+  </update>
+
+  <insert id="insertProcedureTranslation">
+    INSERT INTO JL_PROCEDURE_I18N (procedure_id, language_code, title, summary, eligibility, deadline_text, method_text, notice)
+    VALUES (#{procedureId}, #{lang}, #{title}, #{summary}, #{eligibility}, #{deadline}, #{method}, #{notice})
+  </insert>
+
+  <select id="countPublishedProcedures" resultType="int">
+    SELECT COUNT(*) FROM JL_PROCEDURE WHERE published = 'Y'
+  </select>
+
+  <select id="findDocuments" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT d.id, d.procedure_id, d.name, d.requirement, d.condition_text, d.display_order,
+           p.title AS procedure_title,
+           (SELECT COUNT(*) FROM JL_DOCUMENT_I18N WHERE document_id = d.id AND language_code = 'ko') AS has_ko,
+           (SELECT COUNT(*) FROM JL_DOCUMENT_I18N WHERE document_id = d.id AND language_code = 'en') AS has_en
+    FROM JL_DOCUMENT d
+    JOIN JL_PROCEDURE p ON p.id = d.procedure_id
+    ORDER BY d.procedure_id, d.display_order
+  </select>
+
+  <select id="findDocument" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT d.id, d.procedure_id, d.name, d.requirement, d.condition_text, d.display_order,
+           p.title AS procedure_title
+    FROM JL_DOCUMENT d
+    JOIN JL_PROCEDURE p ON p.id = d.procedure_id
+    WHERE d.id = #{id}
+  </select>
+
+  <select id="findDocumentTranslations" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT language_code, name, condition_text
+    FROM JL_DOCUMENT_I18N
+    WHERE document_id = #{documentId}
+  </select>
+
+  <select id="countDocumentTranslation" resultType="int">
+    SELECT COUNT(*) FROM JL_DOCUMENT_I18N WHERE document_id = #{documentId} AND language_code = #{lang}
+  </select>
+
+  <update id="updateDocumentTranslation">
+    UPDATE JL_DOCUMENT_I18N
+    SET name = #{name}, condition_text = #{conditionText}
+    WHERE document_id = #{documentId} AND language_code = #{lang}
+  </update>
+
+  <insert id="insertDocumentTranslation">
+    INSERT INTO JL_DOCUMENT_I18N (document_id, language_code, name, condition_text)
+    VALUES (#{documentId}, #{lang}, #{name}, #{conditionText})
+  </insert>
+
+  <select id="findSteps" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT s.id, s.procedure_id, s.step_no, s.title, s.description, p.title AS procedure_title
+    FROM JL_STEP s
+    JOIN JL_PROCEDURE p ON p.id = s.procedure_id
+    ORDER BY s.procedure_id, s.step_no
+  </select>
+
+  <select id="findSources" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT s.id, s.procedure_id, s.title, s.url,
+           TO_CHAR(s.checked_on, 'YYYY-MM-DD') AS checked_on,
+           TO_CHAR(s.updated_on, 'YYYY-MM-DD') AS updated_on,
+           p.title AS procedure_title
+    FROM JL_SOURCE s
+    JOIN JL_PROCEDURE p ON p.id = s.procedure_id
+    ORDER BY s.procedure_id, s.id
+  </select>
+
+  <select id="findOffices" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT id, name, address, homepage_url, note FROM JL_OFFICE ORDER BY id
+  </select>
+
+  <insert id="insertProcedure">
+    INSERT INTO JL_PROCEDURE
+      (id, region_id, category_id, title, summary, eligibility, deadline_text, method_text, notice, situation, phase_code, published, revision, updated_at)
+    VALUES
+      (jl_procedure_seq.NEXTVAL, #{regionId}, #{categoryId}, #{title}, #{summary}, #{eligibility}, #{deadline}, #{method}, #{notice}, #{situation}, #{phase}, #{published}, #{revision}, CURRENT_TIMESTAMP)
+  </insert>
+
+  <update id="updateProcedure">
+    UPDATE JL_PROCEDURE
+    SET region_id = #{regionId}, category_id = #{categoryId}, title = #{title}, summary = #{summary},
+        eligibility = #{eligibility}, deadline_text = #{deadline}, method_text = #{method}, notice = #{notice},
+        situation = #{situation}, phase_code = #{phase}, published = #{published}, revision = #{revision}, updated_at = CURRENT_TIMESTAMP
+    WHERE id = #{id}
+  </update>
+
+  <update id="togglePublished">
+    UPDATE JL_PROCEDURE
+    SET published = CASE published WHEN 'Y' THEN 'N' ELSE 'Y' END,
+        revision = revision + 1,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = #{id}
+  </update>
+
+  <insert id="insertDocument">
+    INSERT INTO JL_DOCUMENT (id, procedure_id, name, requirement, condition_text, display_order)
+    VALUES (jl_document_seq.NEXTVAL, #{procedureId}, #{name}, #{requirement}, #{conditionText}, #{displayOrder})
+  </insert>
+
+  <update id="updateDocument">
+    UPDATE JL_DOCUMENT
+    SET procedure_id = #{procedureId}, name = #{name}, requirement = #{requirement},
+        condition_text = #{conditionText}, display_order = #{displayOrder}
+    WHERE id = #{id}
+  </update>
+
+  <insert id="insertStep">
+    INSERT INTO JL_STEP (id, procedure_id, step_no, title, description)
+    VALUES (jl_step_seq.NEXTVAL, #{procedureId}, #{stepNo}, #{title}, #{description})
+  </insert>
+
+  <update id="updateStep">
+    UPDATE JL_STEP
+    SET procedure_id = #{procedureId}, step_no = #{stepNo}, title = #{title}, description = #{description}
+    WHERE id = #{id}
+  </update>
+
+  <insert id="insertSource">
+    INSERT INTO JL_SOURCE (id, procedure_id, title, url, checked_on, updated_on)
+    VALUES (jl_source_seq.NEXTVAL, #{procedureId}, #{title}, #{url}, #{checkedOn}, #{updatedOn})
+  </insert>
+
+  <update id="updateSource">
+    UPDATE JL_SOURCE
+    SET procedure_id = #{procedureId}, title = #{title}, url = #{url}, checked_on = #{checkedOn}, updated_on = #{updatedOn}
+    WHERE id = #{id}
+  </update>
+
+  <insert id="insertOffice">
+    INSERT INTO JL_OFFICE (id, name, address, homepage_url, note)
+    VALUES (jl_office_seq.NEXTVAL, #{name}, #{address}, #{homepageUrl}, #{note})
+  </insert>
+
+  <update id="updateOffice">
+    UPDATE JL_OFFICE
+    SET name = #{name}, address = #{address}, homepage_url = #{homepageUrl}, note = #{note}
+    WHERE id = #{id}
+  </update>
+
+</mapper>

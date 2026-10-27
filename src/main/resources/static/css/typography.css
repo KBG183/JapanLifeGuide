@@ -1,0 +1,15 @@
+body{font-size:17px}
+body{color:#111;font-weight:500}
+.site-header nav,.site-header nav a,.location{color:#111;font-weight:700}
+.page-shell p,.page-shell li,.page-shell label,.page-shell input,.page-shell select,.page-shell button{font-weight:500}
+.muted,.card-description,.document-list p,.step-list p,.source-item p,.office-card p,.sidebar-note,.residence-note,.information-strip p,.site-footer p{color:#222!important;font-weight:500}
+.hero-description,.content-panel>p,.auth-card p,.task-card p{color:#222;font-weight:500}
+.site-header nav{font-size:13px}
+.language-switcher select{font-size:13px}
+.art-steps span{flex:0 0 40px;width:40px;text-align:center;white-space:nowrap;transform:none}
+.hero-description,.residence-note,.card-description,.content-panel>p,.document-list p,.step-list p,.office-card p,.auth-card p,.task-card p{font-size:16px}
+.section-heading>p,.card-bottom,.source-item p,.sidebar-note,.information-strip p{font-size:14px}
+input,select{font-size:15px}
+.button,.header-link{font-size:15px}
+.site-footer p{font-size:13px}
+.site-footer p{color:#e5eee4!important}

@@ -47,6 +47,29 @@ INSERT INTO JL_DOCUMENT_GUIDE VALUES (8,'ja',N'転入する外国人住民の在
 INSERT INTO JL_DOCUMENT_GUIDE VALUES (9,'ja',N'前の市区町村から転出したことを示す証明書です。',N'マイナンバーカードを利用した転出で省略できる場合があります。それ以外は前の自治体の証明書を用意します。');
 INSERT INTO JL_DOCUMENT_GUIDE VALUES (10,'ja',N'マイナンバーを確認するためのカードです。',N'持っている方全員分を用意します。カードを利用した転出では提示が必要です。');
 
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (1,'ko',N'본인 확인과 입국일 확인에 사용하는 여권입니다.',N'전입하는 사람 전원의 여권을 준비합니다.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (2,'ko',N'재류카드·특별영주자증명서 등 해당하는 재류 관련 증명서입니다.',N'전입하는 외국인 주민 전원의 서류를 준비합니다. 후일 교부인 경우 공식 안내를 확인해 주세요.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (3,'ko',N'여권으로 입국일을 확인할 수 없을 때 보완하는 자료입니다.',N'탑승권이나 수하물 태그 등 입국일을 확인할 수 있는 자료를 준비합니다.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (4,'ko',N'가족관계를 확인하기 위한 본국 발행 원본과 일본어 번역문입니다.',N'가족 등 2명 이상이 전입하는 경우 준비합니다.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (5,'ko',N'마이넘버를 확인하기 위한 카드입니다.',N'카드를 가지고 있는 사람의 카드를 준비합니다. 필요한 비밀번호 등은 공식 안내를 확인해 주세요.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (6,'ko',N'국민연금 가입 절차에서 확인할 수 있는 수첩입니다.',N'국민연금 가입 대상자에게 해당합니다. 개인별 가입 조건은 별도로 확인해 주세요.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (7,'ko',N'창구에서 절차를 진행하는 사람의 본인 확인에 사용하는 서류입니다.',N'사용할 수 있는 서류는 공식 안내를 확인해 주세요.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (8,'ko',N'전입하는 외국인 주민의 재류 관련 사항을 확인하는 증명서입니다.',N'전입하는 외국인 주민 전원의 서류를 준비합니다.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (9,'ko',N'이전 시구정촌에서 전출했다는 것을 보여주는 증명서입니다.',N'마이넘버카드를 이용한 전출은 생략할 수 있는 경우가 있습니다. 그 외에는 이전 지자체의 증명서를 준비합니다.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (10,'ko',N'마이넘버를 확인하기 위한 카드입니다.',N'카드를 가진 사람 전원의 카드를 준비합니다. 카드를 이용한 전출에서는 제시가 필요합니다.');
+
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (1,'en',N'A passport used to confirm identity and the date of entry.',N'Prepare one for everyone moving in.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (2,'en',N'An applicable residence-related certificate, such as a residence card or special permanent resident certificate.',N'Prepare one for every foreign resident moving in. Check the official guidance if it will be issued later.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (3,'en',N'Supporting material used when the entry date cannot be confirmed from the passport.',N'Prepare a boarding pass, baggage tag, or similar material showing the entry date.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (4,'en',N'The original document issued in your home country and a Japanese translation used to confirm family relationships.',N'Prepare these when two or more family members move in.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (5,'en',N'A card used to confirm your My Number.',N'Prepare it for people who have one. Check the official guidance for required PINs and other details.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (6,'en',N'A handbook that may be checked during National Pension enrollment procedures.',N'This applies to people who are joining the National Pension. Check individual eligibility separately.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (7,'en',N'Identification used to confirm the person visiting the service counter.',N'Check the official guidance for acceptable documents.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (8,'en',N'A certificate used to confirm the residence status of foreign residents moving in.',N'Prepare one for every foreign resident moving in.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (9,'en',N'A certificate showing that you moved out of your previous municipality.',N'It may be omitted when you used a My Number Card to move out. Otherwise prepare the certificate from the previous municipality.');
+INSERT INTO JL_DOCUMENT_GUIDE VALUES (10,'en',N'A card used to confirm your My Number.',N'Prepare it for everyone who has one. It must be presented when you used it to move out.');
+
+
 INSERT INTO JL_STEP VALUES (1,1,1,N'自分の条件を確認',N'本人・家族・入国日の確認方法に応じて、公式案内を読みます。');
 INSERT INTO JL_STEP VALUES (2,1,2,N'書類と窓口を確認',N'該当する書類を用意し、受付時間を確認します。');
 INSERT INTO JL_STEP VALUES (3,1,3,N'窓口で転入届を提出',N'入居後、期限内に窓口へ。届出用紙は窓口でも受け取れます。');

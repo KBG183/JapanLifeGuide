@@ -41,7 +41,7 @@
     <section class="slide" id="slide-4" data-title="技術スタック" aria-label="4. 技術スタック">
       <div class="slide-topline"><span class="accent-line"></span><p>03 · 技術スタック</p></div>
       <div class="split-heading"><div><p class="eyebrow">実装環境</p><h2>現在のプロジェクトで<br>使用している技術です。</h2></div><p>ライブラリとバージョンは実際のMaven設定を基準に整理しました。</p></div>
-      <div class="stack-grid"><article><span>BACKEND</span><strong>Java 17</strong><p>Spring Boot 3.5.16<br>Spring Security</p></article><article><span>VIEW</span><strong>JSP · JSTL</strong><p>HTML · CSS<br>JavaScript</p></article><article><span>DATABASE</span><strong>Oracle · MyBatis</strong><p>H2 Preview<br>ojdbc8 19.30.0.0</p></article><article><span>BUILD</span><strong>Maven · WAR</strong><p>Embedded Tomcat<br>Java 17</p></article></div>
+      <div class="stack-grid"><article><span>BACKEND</span><strong>Java 17</strong><p>Spring Boot 3.5.16<br>Security · Validation</p></article><article><span>VIEW</span><strong>JSP · JSTL</strong><p>HTML · CSS<br>JavaScript</p></article><article><span>DATABASE</span><strong>Oracle · MyBatis</strong><p>H2 Preview<br>ojdbc8 19.30.0.0</p></article><article><span>BUILD</span><strong>Maven · WAR</strong><p>Embedded Tomcat<br>Java 17</p></article></div>
       <div class="slide-footer-line"><span>技術スタック</span><strong>04</strong></div>
     </section>
 
@@ -110,13 +110,13 @@
 
     <section class="slide" id="slide-15" data-title="セキュリティと整合性" aria-label="15. セキュリティと整合性">
       <div class="slide-topline"><span class="accent-line"></span><p>14 · セキュリティと整合性</p></div><p class="eyebrow">サーバー側の検証</p><h2>画面だけを信頼せず、<br><em>サーバーとDBで確認します。</em></h2>
-      <div class="security-list"><div><strong>BCrypt</strong><span>パスワードの原文ではなくハッシュを保存します。</span></div><div><strong>CSRF</strong><span>状態を変更するリクエストにCSRFトークンを適用します。</span></div><div><strong>権限検証</strong><span>個人記録は所有者、管理機能はADMIN役割を確認します。</span></div><div><strong>入力・ファイル検証</strong><span>文字列長、状態値、画像形式・サイズ・個数を検証します。</span></div></div>
+      <div class="security-list"><div><strong>BCrypt</strong><span>パスワードの原文ではなくハッシュを保存します。</span></div><div><strong>CSRF</strong><span>状態を変更するリクエストにCSRFトークンを適用します。</span></div><div><strong>権限検証</strong><span>個人記録は所有者、管理機能はADMIN役割を確認します。</span></div><div><strong>入力・ファイル検証</strong><span>Bean Validation(@Valid)と画像ヘッダー（マジックナンバー）を検査します。</span></div></div>
       <div class="slide-footer-line"><span>セキュリティと整合性</span><strong>15</strong></div>
     </section>
 
     <section class="slide" id="slide-16" data-title="検証" aria-label="16. 検証">
       <div class="slide-topline"><span class="accent-line"></span><p>15 · 検証</p></div>
-      <div class="two-column"><div><p class="eyebrow">テストとレビュー</p><h2>修正後は<br><em>実行結果で確認しました。</em></h2></div><div class="result-panel"><strong>39</strong><span>統合テスト合格</span><hr><p>H2プレビュー環境で会員・個人チェックリスト・コミュニティ・通報・管理機能を検証しました。</p><ul><li>HTTP公開・認証ルートを確認</li><li>Oracle識別子30文字制限を確認</li><li>ブラウザ画面とコンソールエラーを確認</li></ul></div></div>
+      <div class="two-column"><div><p class="eyebrow">テストとレビュー</p><h2>修正後は<br><em>実行結果で確認しました。</em></h2></div><div class="result-panel"><strong>41</strong><span>統合テスト合格</span><hr><p>H2プレビュー環境で会員・個人チェックリスト・コミュニティ・通報・管理機能を検証しました。</p><ul><li>HTTP公開・認証ルートを確認</li><li>Oracle識別子30文字制限を確認</li><li>ブラウザ画面とコンソールエラーを確認</li></ul></div></div>
       <div class="slide-footer-line"><span>検証</span><strong>16</strong></div>
     </section>
 

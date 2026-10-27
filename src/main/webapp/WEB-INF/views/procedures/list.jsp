@@ -1,0 +1,43 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="${currentLanguage}"/><fmt:setBundle basename="messages/messages"/>
+<!DOCTYPE html>
+<html lang="${currentLanguage}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><fmt:message key="procedure.searchTitle"/> | JAPAN LIFE GUIDE</title><c:url var="css" value="/css/app.css"/><link rel="stylesheet" href="${css}"></head>
+<body>
+<%@ include file="../fragments/header.jspf" %>
+<main id="main" class="page-shell">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy"><p class="eyebrow"><fmt:message key="procedure.heroEyebrow"/></p><h1 id="hero-title"><fmt:message key="procedure.heroTitle"/></h1><p class="hero-description"><fmt:message key="procedure.heroDescription"/></p><div class="hero-tags"><span><fmt:message key="procedure.foreignResidents"/></span><span><fmt:message key="procedure.officialLinks"/></span></div></div>
+    <div class="hero-art" aria-hidden="true"><div class="art-label"><fmt:message key="procedure.artLabel"/></div><div class="art-route"><span>01</span><i></i><span>02</span><i></i><span>03</span></div><div class="art-steps"><span><fmt:message key="procedure.artSearch"/></span><span><fmt:message key="procedure.artPrepare"/></span><span><fmt:message key="procedure.artSubmit"/></span></div><div class="skyline"><i></i><i></i><i></i><i></i><i></i></div><p><fmt:message key="procedure.artLocation"/> <span>35°N</span></p></div>
+  </section>
+  <section class="search-panel" aria-labelledby="search-heading">
+    <div class="section-heading"><div><p class="eyebrow"><fmt:message key="procedure.searchTitle"/></p><h2 id="search-heading"><fmt:message key="procedure.findHeading"/></h2></div><p><fmt:message key="procedure.residenceArea"/> <strong><fmt:message key="procedure.region.2"/></strong></p></div>
+    <p class="residence-note"><fmt:message key="procedure.residenceNote"/></p>
+    <nav class="quick-filters" aria-label="<fmt:message key='procedure.quickFilters'/>">
+      <c:url var="allProceduresUrl" value="/procedures"/><a class="quick-filter ${empty phase and empty situation ? 'active' : ''}" href="${allProceduresUrl}"><fmt:message key="procedure.quickAll"/></a>
+      <c:url var="arrivalUrl" value="/procedures"><c:param name="phase" value="AFTER_ARRIVAL"/></c:url><a class="quick-filter ${phase == 'AFTER_ARRIVAL' ? 'active' : ''}" href="${arrivalUrl}"><fmt:message key="procedure.quickArrival"/></a>
+      <c:url var="dailyUrl" value="/procedures"><c:param name="phase" value="DAILY_LIFE"/></c:url><a class="quick-filter ${phase == 'DAILY_LIFE' ? 'active' : ''}" href="${dailyUrl}"><fmt:message key="procedure.quickDaily"/></a>
+      <c:url var="schoolUrl" value="/procedures"><c:param name="phase" value="WORK_OR_SCHOOL"/></c:url><a class="quick-filter ${phase == 'WORK_OR_SCHOOL' ? 'active' : ''}" href="${schoolUrl}"><fmt:message key="procedure.quickSchool"/></a>
+    </nav>
+    <form action="${homeUrl}" method="get" class="search-form">
+      <div class="field search-field"><label for="q"><fmt:message key="procedure.keyword"/></label><input id="q" name="q" maxlength="80" value="<c:out value='${q}'/>" placeholder="<fmt:message key='procedure.searchPlaceholder'/>"></div>
+      <div class="field"><label for="phase"><fmt:message key="procedure.phase"/></label><select name="phase" id="phase"><option value=""><fmt:message key="procedure.allPhases"/></option><option value="BEFORE_DEPARTURE" ${phase == 'BEFORE_DEPARTURE' ? 'selected' : ''}><fmt:message key="procedure.phase.beforeDeparture"/></option><option value="AFTER_ARRIVAL" ${phase == 'AFTER_ARRIVAL' ? 'selected' : ''}><fmt:message key="procedure.phase.afterArrival"/></option><option value="DAILY_LIFE" ${phase == 'DAILY_LIFE' ? 'selected' : ''}><fmt:message key="procedure.phase.dailyLife"/></option><option value="WORK_OR_SCHOOL" ${phase == 'WORK_OR_SCHOOL' ? 'selected' : ''}><fmt:message key="procedure.phase.workOrSchool"/></option><option value="MOVING_OR_UPDATE" ${phase == 'MOVING_OR_UPDATE' ? 'selected' : ''}><fmt:message key="procedure.phase.movingOrUpdate"/></option></select></div>
+      <div class="field"><label for="situation"><fmt:message key="procedure.situation"/></label><select name="situation" id="situation"><option value=""><fmt:message key="procedure.allSituations"/></option><option value="ABROAD" ${situation == 'ABROAD' ? 'selected' : ''}><fmt:message key="procedure.fromOverseas"/></option><option value="DOMESTIC" ${situation == 'DOMESTIC' ? 'selected' : ''}><fmt:message key="procedure.withinJapan"/></option></select></div>
+      <button type="submit" class="button"><fmt:message key="procedure.searchButton"/> <span aria-hidden="true">→</span></button>
+    </form>
+  </section>
+  <section class="results" aria-labelledby="results-title">
+    <div class="results-heading"><h2 id="results-title"><fmt:message key="procedure.listTitle"/> <span class="count">${total}<fmt:message key="procedure.resultUnit"/></span></h2><c:if test="${not empty q or not empty situation or not empty phase}"><a class="text-link" href="${homeUrl}"><fmt:message key="procedure.clear"/></a></c:if></div>
+    <c:choose><c:when test="${empty items}"><div class="empty-state"><span aria-hidden="true">⌕</span><h3><fmt:message key="procedure.noResults"/></h3><p><fmt:message key="procedure.tryAgain"/></p><a class="button secondary" href="${homeUrl}"><fmt:message key="procedure.showAll"/></a></div></c:when><c:otherwise>
+      <div class="card-grid"><c:forEach items="${items}" var="item"><c:url var="detailUrl" value="/procedures/${item.id}"/>
+        <article class="procedure-card"><div class="card-top"><c:set var="categoryKey" value="procedure.category.${item.categoryId}"/><span class="category"><fmt:message key="${categoryKey}"/></span><span class="card-symbol" aria-hidden="true">${item.situation == 'ABROAD' ? '↘' : '→'}</span></div><div class="card-badges"><c:set var="phaseKey" value="procedure.phase.${item.phaseCode}"/><span class="phase-badge"><fmt:message key="${phaseKey}"/></span><span class="situation-badge"><c:choose><c:when test="${item.situation == 'ABROAD'}"><fmt:message key="procedure.fromOverseas"/></c:when><c:otherwise><fmt:message key="procedure.withinJapan"/></c:otherwise></c:choose></span></div><h3><a href="${detailUrl}"><c:out value="${item.title}"/></a></h3><p class="card-description"><c:out value="${item.summary}"/></p><div class="card-meta"><span><strong>${item.documentCount}</strong> <fmt:message key="procedure.documentCount"/></span><span><strong>${item.stepCount}</strong> <fmt:message key="procedure.stepCount"/></span></div><div class="card-bottom"><c:set var="regionKey" value="procedure.region.${item.regionId}"/><span><fmt:message key="${regionKey}"/> · <fmt:message key="procedure.residenceProcedure"/></span><a href="${detailUrl}" class="text-link"><fmt:message key="procedure.details"/> <span aria-hidden="true">↗</span></a></div></article>
+      </c:forEach></div>
+      <c:if test="${pages > 1}"><nav class="pagination" aria-label="<fmt:message key='procedure.pagination'/>"><c:if test="${page > 1}"><c:url var="previous" value="/procedures"><c:param name="q" value="${q}"/><c:param name="situation" value="${situation}"/><c:param name="phase" value="${phase}"/><c:param name="page" value="${page - 1}"/></c:url><a href="<c:out value='${previous}'/>">← <fmt:message key="procedure.previous"/></a></c:if><span>${page} / ${pages}</span><c:if test="${page < pages}"><c:url var="next" value="/procedures"><c:param name="q" value="${q}"/><c:param name="situation" value="${situation}"/><c:param name="phase" value="${phase}"/><c:param name="page" value="${page + 1}"/></c:url><a href="<c:out value='${next}'/>"><fmt:message key="procedure.next"/> →</a></c:if></nav></c:if>
+    </c:otherwise></c:choose>
+  </section>
+  <aside class="information-strip"><span class="info-icon" aria-hidden="true">i</span><div><h3><fmt:message key="procedure.informationTitle"/></h3><p><fmt:message key="procedure.informationText"/></p></div></aside>
+  <section class="information-strip community-entry-strip" aria-labelledby="community-entry-title"><span class="info-icon" aria-hidden="true">◌</span><div><h3 id="community-entry-title"><fmt:message key="community.homeTitle"/></h3><p><fmt:message key="community.homeDescription"/></p></div><a class="button secondary" href="<c:url value='/community'/>"><fmt:message key="community.homeLink"/> <span aria-hidden="true">→</span></a></section>
+</main>
+<%@ include file="../fragments/footer.jspf" %>
+</body></html>

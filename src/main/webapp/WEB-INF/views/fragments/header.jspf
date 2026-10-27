@@ -1,0 +1,33 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="${currentLanguage}"/><fmt:setBundle basename="messages/messages"/>
+<c:url var="homeUrl" value="/procedures"/>
+<c:url var="styleUrl" value="/css/app.css"/>
+<c:url var="scriptUrl" value="/js/app.js"/>
+<c:url var="languageStyleUrl" value="/css/language.css"/>
+<link rel="stylesheet" href="${languageStyleUrl}">
+<c:url var="typographyStyleUrl" value="/css/typography.css"/>
+<link rel="stylesheet" href="${typographyStyleUrl}?v=5">
+<a class="skip-link" href="#main"><fmt:message key="nav.skipToMain"/></a>
+<header class="site-header">
+  <a class="brand" href="${homeUrl}" aria-label="<fmt:message key='nav.brandHome'/>"><span class="brand-mark" aria-hidden="true">J<span>•</span></span><span>JAPAN <strong>LIFE GUIDE</strong><small><fmt:message key="nav.brandTagline"/></small></span></a>
+  <nav aria-label="<fmt:message key='nav.mainMenu'/>">
+    <a href="<c:url value='/community'/>"><fmt:message key="nav.community"/></a>
+    <c:choose>
+      <c:when test="${not empty pageContext.request.userPrincipal}">
+        <c:choose>
+          <c:when test="${pageContext.request.isUserInRole('ROLE_ADMIN')}"><a href="<c:url value='/admin'/>"><fmt:message key="nav.admin"/></a></c:when>
+          <c:otherwise><a href="<c:url value='/account'/>"><fmt:message key="nav.account"/></a></c:otherwise>
+        </c:choose>
+        <a href="<c:url value='/my/tasks'/>"><fmt:message key="nav.myTasks"/></a>
+        <a href="<c:url value='/my/community'/>"><fmt:message key="nav.myCommunity"/><c:if test="${unreadNotificationCount > 0}"><span class="notification-badge">${unreadNotificationCount}</span></c:if></a>
+        <form action="<c:url value='/logout'/>" method="post" class="inline-form"><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"><button type="submit" class="header-link"><fmt:message key="nav.logout"/></button></form>
+      </c:when>
+      <c:otherwise><c:url var="headerLoginUrl" value="/login"><c:param name="returnTo" value="${loginContinue}"/></c:url><a href="${headerLoginUrl}"><fmt:message key="nav.login"/></a><a href="<c:url value='/register'/>"><fmt:message key="nav.register"/></a></c:otherwise>
+    </c:choose>
+    <div class="language-switcher"><label for="language-select"><fmt:message key="nav.language"/></label><select id="language-select" onchange="window.location.assign(this.value)"><option value="<c:out value='${languageLinks.ja}'/>" ${currentLanguage == 'ja' ? 'selected' : ''}>日本語</option><option value="<c:out value='${languageLinks.ko}'/>" ${currentLanguage == 'ko' ? 'selected' : ''}>한국어</option><option value="<c:out value='${languageLinks.en}'/>" ${currentLanguage == 'en' ? 'selected' : ''}>English</option></select></div>
+    <span class="location"><fmt:message key="nav.location"/></span>
+  </nav>
+</header>
+<c:if test="${preview}"><div class="preview-notice" role="status"><fmt:message key="preview.title"/> <span><fmt:message key="preview.description"/></span></div></c:if>

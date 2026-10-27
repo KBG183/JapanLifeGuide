@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.japanlife.mapper.TaskMapper">
+  <sql id="taskColumns">t.id, t.member_id, t.procedure_id, t.saved_revision, p.revision AS current_revision, NVL(pi.title, t.saved_title) AS saved_title, t.status, t.memo, TO_CHAR(t.visit_date, 'YYYY-MM-DD') AS visit_date, TO_CHAR(t.completed_at, 'YYYY-MM-DD HH24:MI:SS') AS completed_at</sql>
+  <select id="findAllByMember" resultType="com.japanlife.dto.UserTask">SELECT <include refid="taskColumns"/> FROM JL_USER_TASK t JOIN JL_PROCEDURE p ON p.id = t.procedure_id LEFT JOIN JL_PROCEDURE_I18N pi ON pi.procedure_id = t.procedure_id AND pi.language_code = #{language} WHERE t.member_id = #{memberId} ORDER BY t.id DESC</select>
+  <select id="findByIdAndMember" resultType="com.japanlife.dto.UserTask">SELECT <include refid="taskColumns"/> FROM JL_USER_TASK t JOIN JL_PROCEDURE p ON p.id = t.procedure_id LEFT JOIN JL_PROCEDURE_I18N pi ON pi.procedure_id = t.procedure_id AND pi.language_code = #{language} WHERE t.id = #{id} AND t.member_id = #{memberId}</select>
+  <select id="findByProcedureAndMember" resultType="com.japanlife.dto.UserTask">SELECT t.id, t.member_id, t.procedure_id, t.saved_revision, t.saved_title, t.status, t.memo, TO_CHAR(t.visit_date, 'YYYY-MM-DD') AS visit_date, TO_CHAR(t.completed_at, 'YYYY-MM-DD HH24:MI:SS') AS completed_at FROM JL_USER_TASK t WHERE t.procedure_id = #{procedureId} AND t.member_id = #{memberId}</select>
+  <select id="findChecks" resultType="com.japanlife.dto.UserCheck">SELECT uc.id, NVL(di.name, uc.document_name) AS document_name, uc.requirement, NVL(di.condition_text, uc.condition_text) AS condition_text, uc.display_order, uc.checked FROM JL_USER_CHECK uc JOIN JL_USER_TASK ut ON ut.id = uc.task_id LEFT JOIN JL_DOCUMENT d ON d.procedure_id = ut.procedure_id AND d.display_order = uc.display_order LEFT JOIN JL_DOCUMENT_I18N di ON di.document_id = d.id AND di.language_code = #{language} WHERE uc.task_id = #{taskId} ORDER BY uc.display_order</select>
+  <insert id="insertTask" parameterType="com.japanlife.dto.UserTask"><selectKey keyProperty="id" resultType="long" order="BEFORE">SELECT jl_user_task_seq.NEXTVAL FROM DUAL</selectKey>INSERT INTO JL_USER_TASK (id, member_id, procedure_id, saved_revision, saved_title, status) VALUES (#{id}, #{memberId}, #{procedureId}, #{savedRevision}, #{savedTitle}, 'NOT_STARTED')</insert>
+  <insert id="insertCheck" parameterType="com.japanlife.dto.UserCheck"><selectKey keyProperty="id" resultType="long" order="BEFORE">SELECT jl_user_check_seq.NEXTVAL FROM DUAL</selectKey>INSERT INTO JL_USER_CHECK (id, task_id, document_name, requirement, condition_text, display_order, checked) VALUES (#{id}, #{taskId}, #{documentName}, #{requirement}, #{conditionText}, #{displayOrder}, 'N')</insert>
+  <update id="updateCheck">UPDATE JL_USER_CHECK SET checked = #{checked} WHERE id = #{checkId} AND task_id = #{taskId}</update>
+  <update id="updateStatus">UPDATE JL_USER_TASK SET status = #{status}, completed_at = <choose><when test="status == 'COMPLETED'">CURRENT_TIMESTAMP</when><otherwise>NULL</otherwise></choose> WHERE id = #{id} AND member_id = #{memberId}</update>
+  <select id="findEvents" resultType="com.japanlife.dto.TaskEvent">
+    SELECT e.id, e.task_id, e.member_id, TO_CHAR(e.event_date, 'YYYY-MM-DD') AS event_date,
+           e.title, e.memo, e.completed, NVL(pi.title, t.saved_title) AS task_title
+    FROM JL_USER_TASK_EVENT e JOIN JL_USER_TASK t ON t.id = e.task_id
+    LEFT JOIN JL_PROCEDURE_I18N pi ON pi.procedure_id = t.procedure_id AND pi.language_code = #{language}
+    WHERE e.member_id = #{memberId}
+      AND e.event_date &gt;= TO_DATE(#{from}, 'YYYY-MM-DD')
+      AND e.event_date &lt; TO_DATE(#{to}, 'YYYY-MM-DD')
+    ORDER BY e.event_date, e.id
+  </select>
+  <select id="findEventByIdAndMember" resultType="com.japanlife.dto.TaskEvent">
+    SELECT e.id, e.task_id, e.member_id, TO_CHAR(e.event_date, 'YYYY-MM-DD') AS event_date,
+           e.title, e.memo, e.completed, t.saved_title AS task_title
+    FROM JL_USER_TASK_EVENT e JOIN JL_USER_TASK t ON t.id = e.task_id
+    WHERE e.id = #{id} AND e.member_id = #{memberId}
+  </select>
+  <insert id="insertEvent" parameterType="com.japanlife.dto.TaskEvent">
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">SELECT jl_user_task_event_seq.NEXTVAL FROM DUAL</selectKey>
+    INSERT INTO JL_USER_TASK_EVENT (id, task_id, member_id, event_date, title, memo, completed)
+    VALUES (#{id}, #{taskId}, #{memberId}, TO_DATE(#{eventDate}, 'YYYY-MM-DD'), #{title}, #{memo}, 'N')
+  </insert>
+  <update id="updateEventCompleted">UPDATE JL_USER_TASK_EVENT SET completed = #{completed}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id} AND member_id = #{memberId}</update>
+  <delete id="deleteEvent">DELETE FROM JL_USER_TASK_EVENT WHERE id = #{id} AND member_id = #{memberId}</delete>
+  <delete id="deleteEventsByTask">DELETE FROM JL_USER_TASK_EVENT WHERE task_id = #{taskId} AND member_id = #{memberId}</delete>
+  <delete id="deleteChecksByTask">DELETE FROM JL_USER_CHECK WHERE task_id = #{taskId}</delete>
+  <delete id="deleteTask">DELETE FROM JL_USER_TASK WHERE id = #{id} AND member_id = #{memberId}</delete>
+</mapper>

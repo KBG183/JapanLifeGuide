@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.japanlife.mapper.ProcedureMapper">
+  <sql id="filters">
+    p.published = 'Y'
+    AND (LOWER(NVL(pi.title, p.title)) LIKE LOWER(#{pattern}) ESCAPE '!'
+      OR LOWER(NVL(pi.summary, p.summary)) LIKE LOWER(#{pattern}) ESCAPE '!')
+    <if test="situation != null and situation != ''">AND p.situation = #{situation}</if>
+    <if test="phase != null and phase != ''">AND p.phase_code = #{phase}</if>
+  </sql>
+  <sql id="columns">
+    p.id, NVL(pi.title, p.title) AS title, NVL(pi.summary, p.summary) AS summary,
+    NVL(pi.eligibility, p.eligibility) AS eligibility, NVL(pi.deadline_text, p.deadline_text) AS deadline_text,
+    NVL(pi.method_text, p.method_text) AS method_text, NVL(pi.notice, p.notice) AS notice,
+    p.situation, p.phase_code, p.revision, p.region_id, p.category_id, r.name AS region_name, c.name AS category_name,
+    (SELECT COUNT(*) FROM JL_DOCUMENT d_count WHERE d_count.procedure_id = p.id) AS document_count,
+    (SELECT COUNT(*) FROM JL_STEP s_count WHERE s_count.procedure_id = p.id) AS step_count
+  </sql>
+  <sql id="joins">
+    JL_PROCEDURE p JOIN JL_REGION r ON r.id = p.region_id
+    JOIN JL_CATEGORY c ON c.id = p.category_id
+    LEFT JOIN JL_PROCEDURE_I18N pi ON pi.procedure_id = p.id AND pi.language_code = #{language}
+  </sql>
+  <select id="search" resultType="com.japanlife.dto.Procedure">
+    SELECT * FROM (
+      SELECT <include refid="columns"/>, ROW_NUMBER() OVER (ORDER BY p.id) AS rn
+      FROM <include refid="joins"/> WHERE <include refid="filters"/>
+    ) WHERE rn &gt; #{offset} AND rn &lt;= #{endRow} ORDER BY rn
+  </select>
+  <select id="count" resultType="int">
+    SELECT COUNT(*) FROM <include refid="joins"/> WHERE <include refid="filters"/>
+  </select>
+  <select id="findPublished" resultType="com.japanlife.dto.Procedure">
+    SELECT <include refid="columns"/> FROM <include refid="joins"/>
+    WHERE p.id = #{id} AND p.published = 'Y'
+  </select>
+  <select id="findDocuments" resultType="com.japanlife.dto.RequiredDocument">
+    SELECT d.id, NVL(di.name, d.name) AS name, d.requirement,
+           NVL(di.condition_text, d.condition_text) AS condition_text,
+           NVL(dg.description, dgj.description) AS description,
+           NVL(dg.preparation_note, dgj.preparation_note) AS preparation_note
+    FROM JL_DOCUMENT d LEFT JOIN JL_DOCUMENT_I18N di
+      ON di.document_id = d.id AND di.language_code = #{language}
+    LEFT JOIN JL_DOCUMENT_GUIDE dg
+      ON dg.document_id = d.id AND dg.language_code = #{language}
+    LEFT JOIN JL_DOCUMENT_GUIDE dgj
+      ON dgj.document_id = d.id AND dgj.language_code = 'ja'
+    WHERE d.procedure_id = #{id} ORDER BY d.display_order
+  </select>
+  <select id="findSteps" resultType="com.japanlife.dto.ProcedureStep">
+    SELECT s.step_no, NVL(si.title, s.title) AS title,
+           NVL(si.description, s.description) AS description
+    FROM JL_STEP s LEFT JOIN JL_STEP_I18N si
+      ON si.step_id = s.id AND si.language_code = #{language}
+    WHERE s.procedure_id = #{id} ORDER BY s.step_no
+  </select>
+  <select id="findSources" resultType="com.japanlife.dto.OfficialSource">
+    SELECT s.id, NVL(si.title, s.title) AS title, s.url,
+           TO_CHAR(s.checked_on, 'YYYY-MM-DD') AS checked_on,
+           TO_CHAR(s.updated_on, 'YYYY-MM-DD') AS updated_on
+    FROM JL_SOURCE s LEFT JOIN JL_SOURCE_I18N si
+      ON si.source_id = s.id AND si.language_code = #{language}
+    WHERE s.procedure_id = #{id} ORDER BY s.id
+  </select>
+  <select id="findOffices" resultType="com.japanlife.dto.Office">
+    SELECT NVL(oi.name, o.name) AS name, o.address, o.homepage_url,
+           NVL(oi.note, o.note) AS note
+    FROM JL_OFFICE o JOIN JL_PROC_OFFICE po ON po.office_id = o.id
+    LEFT JOIN JL_OFFICE_I18N oi ON oi.office_id = o.id AND oi.language_code = #{language}
+    WHERE po.procedure_id = #{id} ORDER BY o.id
+  </select>
+</mapper>

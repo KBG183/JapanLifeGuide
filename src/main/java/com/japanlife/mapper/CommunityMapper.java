@@ -1,0 +1,59 @@
+package com.japanlife.mapper;
+
+import java.util.List;
+import java.util.Map;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.util.LinkedCaseInsensitiveMap;
+
+@Mapper
+public interface CommunityMapper {
+    int countPosts(@Param("category") String category, @Param("query") String query);
+    List<Map<String, Object>> findPosts(@Param("category") String category, @Param("query") String query, @Param("offset") int offset, @Param("limit") int limit);
+    int updateViewCount(long id);
+    Map<String, Object> findPostById(long id);
+    Map<String, Object> findEditablePost(@Param("id") long id, @Param("memberId") long memberId);
+    List<Map<String, Object>> findComments(long postId);
+    List<Map<String, Object>> findImages(long postId);
+    Integer findBookmarkCount(@Param("memberId") long memberId, @Param("postId") long postId);
+    int deleteBookmark(@Param("memberId") long memberId, @Param("postId") long postId);
+    int insertBookmark(@Param("memberId") long memberId, @Param("postId") long postId);
+    List<Map<String, Object>> findBookmarks(long memberId);
+    long getNextPostId();
+    int insertPost(@Param("id") long id, @Param("memberId") long memberId, @Param("category") String category, @Param("title") String title, @Param("body") String body);
+    int insertImage(@Param("postId") long postId, @Param("originalName") String originalName, @Param("storedName") String storedName, @Param("contentType") String contentType, @Param("fileSize") long fileSize, @Param("displayOrder") int displayOrder);
+    int insertComment(@Param("postId") long postId, @Param("memberId") long memberId, @Param("body") String body);
+    Long findPostOwnerId(long postId);
+    int insertNotification(@Param("memberId") long memberId, @Param("notificationType") String notificationType, @Param("postId") Long postId, @Param("message") String message);
+    int deleteLike(@Param("postId") long postId, @Param("memberId") long memberId);
+    int insertLike(@Param("postId") long postId, @Param("memberId") long memberId);
+    Integer findLikeCount(long postId);
+    Integer findUserLikeCount(@Param("postId") long postId, @Param("memberId") long memberId);
+    int updatePost(@Param("id") long id, @Param("memberId") long memberId, @Param("category") String category, @Param("title") String title, @Param("body") String body);
+    int updateComment(@Param("id") long id, @Param("postId") long postId, @Param("memberId") long memberId, @Param("body") String body);
+    Integer findUnreadNotificationCount(long memberId);
+    List<Map<String, Object>> findNotifications(long memberId);
+    int markNotificationRead(@Param("id") long id, @Param("memberId") long memberId);
+    int markAllNotificationsRead(long memberId);
+    List<String> findStoredImageNames(long postId);
+    int deletePost(@Param("id") long id, @Param("memberId") long memberId);
+    int deleteComment(@Param("id") long id, @Param("memberId") long memberId);
+    Integer countActivePosts(long postId);
+    Integer countPostOwner(@Param("postId") long postId, @Param("memberId") long memberId);
+    Integer countOpenPostReports(@Param("postId") long postId, @Param("memberId") long memberId);
+    int insertPostReport(@Param("postId") long postId, @Param("memberId") long memberId, @Param("reason") String reason);
+    Integer countActiveCommentOnActivePost(long commentId);
+    Integer countCommentOwner(@Param("commentId") long commentId, @Param("memberId") long memberId);
+    Integer countOpenCommentReports(@Param("commentId") long commentId, @Param("memberId") long memberId);
+    int insertCommentReport(@Param("commentId") long commentId, @Param("memberId") long memberId, @Param("reason") String reason);
+    List<Map<String, Object>> findReports();
+    List<Map<String, Object>> findAdminPosts(@Param("category") String category, @Param("query") String query);
+    int updatePostStatus(@Param("id") long id, @Param("status") String status);
+    Map<String, Object> findReportById(long id);
+    String findPostStatus(long id);
+    String findCommentStatus(long id);
+    int updateReportStatus(@Param("id") long id, @Param("status") String status);
+    int updateCommentStatus(@Param("id") long id, @Param("status") String status);
+    int insertReportAudit(@Param("reportId") long reportId, @Param("adminId") long adminId, @Param("actionType") String actionType, @Param("previousReportStatus") String previousReportStatus, @Param("newReportStatus") String newReportStatus, @Param("targetType") String targetType, @Param("previousContentStatus") String previousContentStatus, @Param("newContentStatus") String newContentStatus);
+    Integer countVisibleImage(String stored);
+}
