@@ -41,7 +41,7 @@
     <section class="slide" id="slide-4" data-title="技術スタック" aria-label="4. 技術スタック">
       <div class="slide-topline"><span class="accent-line"></span><p>03 · 技術スタック</p></div>
       <div class="split-heading"><div><p class="eyebrow">実装環境</p><h2>現在のプロジェクトで<br>使用している技術です。</h2></div><p>ライブラリとバージョンは実際のMaven設定を基準に整理しました。</p></div>
-      <div class="stack-grid"><article><span>BACKEND</span><strong>Java 17</strong><p>Spring Boot 3.5.16<br>Security · Validation</p></article><article><span>VIEW</span><strong>JSP · JSTL</strong><p>HTML · CSS<br>JavaScript</p></article><article><span>DATABASE</span><strong>Oracle · MyBatis</strong><p>H2 Preview<br>ojdbc8 19.30.0.0</p></article><article><span>BUILD</span><strong>Maven · WAR</strong><p>Embedded Tomcat<br>Java 17</p></article></div>
+      <div class="stack-grid"><article><span>BACKEND</span><strong>Java 17</strong><p>Spring Boot 3.5.16<br>Security · Bean Validation</p><div class="badge-chip">Spring Boot 3.5</div></article><article><span>DATABASE</span><strong>Oracle · MyBatis</strong><p>100% XML Mapper 分離<br>H2 Oracle Mode 互換</p><div class="badge-chip orange">MyBatis 100%</div></article><article><span>FRONTEND</span><strong>JSP · JSTL</strong><p>HTML5 · CSS3 · ES6+<br>fetch API 非同期通信</p><div class="badge-chip blue">fetch API 非同期</div></article><article><span>QUALITY</span><strong>41 Tests</strong><p>MockMvc 統合テスト<br>Oracle 11g 互換検証</p><div class="badge-chip">41 Tests PASS</div></article></div>
       <div class="slide-footer-line"><span>技術スタック</span><strong>04</strong></div>
     </section>
 
@@ -84,8 +84,9 @@
     </section>
 
     <section class="slide" id="slide-11" data-title="コミュニティ" aria-label="11. コミュニティ">
-      <div class="slide-topline"><span class="accent-line"></span><p>10 · コミュニティ</p></div><p class="eyebrow">生活経験の共有</p><h2>生活経験を共有し、<br><em>必要な情報を一緒に探します。</em></h2>
-      <div class="community-demo"><aside><b>すべての投稿</b><span>行政手続き</span><span>住まい・生活</span><span>留学生生活</span><span>就職・仕事</span></aside><article><small>生活 · 2026.10.02</small><h3>日本での生活を始めるときに準備したこと</h3><p>投稿本文、コメント、画像添付と反応機能を提供します。</p><footer>閲覧数 · いいね · コメント</footer></article></div>
+      <div class="slide-topline"><span class="accent-line"></span><p>10 · コミュニティ</p></div><p class="eyebrow">生活経験の共有と非同期UX</p><h2>生活経験を共有し、<br><em>fetch APIでスムーズに反応します。</em></h2>
+      <div class="community-demo"><aside><b>すべての投稿</b><span>行政手続き</span><span>住まい・生活</span><span>留学生生活</span><span>就職・仕事</span></aside><article><small>生活 · 2026.10.02</small><h3>日本での生活を始めるときに準備したこと</h3><p>投稿本文、画像添付、そしてfetch APIによる画面再読込のない非同期コメント・いいね・ブックマークを提供します。</p><footer>閲覧数 · いいね · コメント</footer></article></div>
+      <div class="feature-pills"><span class="badge-chip">⚡ 非同期コメント (作成・修正・削除)</span><span class="badge-chip">⚡ 即時いいね・ブックマーク</span><span class="badge-chip">画像マジックナンバー検証</span></div>
       <div class="slide-footer-line"><span>コミュニティ</span><strong>11</strong></div>
     </section>
 
@@ -96,8 +97,8 @@
     </section>
 
     <section class="slide" id="slide-13" data-title="管理者機能" aria-label="13. 管理者機能">
-      <div class="slide-topline"><span class="accent-line"></span><p>12 · 管理者</p></div><p class="eyebrow">ROLE ADMIN</p><h2>管理者だけに<br><em>運営機能を提供します。</em></h2>
-      <div class="admin-grid"><article><span>MEMBER</span><strong>会員管理</strong><p>会員の役割と状態を変更します。</p></article><article><span>CONTENT</span><strong>行政コンテンツ</strong><p>手続き・書類・手順・出典・機関を登録・編集し、公開状態を管理します。</p></article><article><span>COMMUNITY</span><strong>投稿・通報</strong><p>投稿の状態を変更し、通報を処理します。</p></article></div>
+      <div class="slide-topline"><span class="accent-line"></span><p>12 · 管理者</p></div><p class="eyebrow">ROLE ADMIN</p><h2>管理者だけに<br><em>安全な運営機能を提供します。</em></h2>
+      <div class="admin-grid"><article><span>MEMBER</span><strong>会員管理</strong><p>会員の役割(ROLE)と状態(ACTIVE/INACTIVE)を変更し、監査ログを記録します。</p></article><article><span>CONTENT</span><strong>行政コンテンツ</strong><p>手続き・書類・手順・公式機関を登録・編集し、多言語翻訳と公開状態を管理します。</p></article><article><span>COMMUNITY</span><strong>投稿・通報管理</strong><p>Oracle 11g ROWNUMによる10件単位のページング、投稿状態変更、通報処理を行います。</p><div class="badge-chip orange">10件ページング (ROWNUM)</div></article></div>
       <div class="slide-footer-line"><span>管理者機能</span><strong>13</strong></div>
     </section>
 
@@ -109,20 +110,20 @@
     </section>
 
     <section class="slide" id="slide-15" data-title="セキュリティと整合性" aria-label="15. セキュリティと整合性">
-      <div class="slide-topline"><span class="accent-line"></span><p>14 · セキュリティと整合性</p></div><p class="eyebrow">サーバー側の検証</p><h2>画面だけを信頼せず、<br><em>サーバーとDBで確認します。</em></h2>
-      <div class="security-list"><div><strong>BCrypt</strong><span>パスワードの原文ではなくハッシュを保存します。</span></div><div><strong>CSRF</strong><span>状態を変更するリクエストにCSRFトークンを適用します。</span></div><div><strong>権限検証</strong><span>個人記録は所有者、管理機能はADMIN役割を確認します。</span></div><div><strong>入力・ファイル検証</strong><span>Bean Validation(@Valid)と画像ヘッダー（マジックナンバー）を検査します。</span></div></div>
+      <div class="slide-topline"><span class="accent-line"></span><p>14 · セキュリティと整合性</p></div><p class="eyebrow">サーバー側の検証とUX配慮</p><h2>画面だけを信頼せず、<br><em>サーバーとDBで厳格に検証します。</em></h2>
+      <div class="security-list"><div><strong>BCrypt</strong><span>パスワードの原文ではなくハッシュを保存します。</span></div><div><strong>CSRF &amp; IDOR</strong><span>全変更リクエストにCSRF検証、本人以外の直接操作を遮断します。</span></div><div><strong>入力保持 &amp; 検証</strong><span>Bean Validation(@Valid)とエラー時の入力値復元（入力消失防止）を適用。</span></div><div><strong>ファイル検証</strong><span>拡張子偽装を防ぐため画像バイナリヘッダー（マジックナンバー）を検査します。</span></div></div>
       <div class="slide-footer-line"><span>セキュリティと整合性</span><strong>15</strong></div>
     </section>
 
     <section class="slide" id="slide-16" data-title="検証" aria-label="16. 検証">
       <div class="slide-topline"><span class="accent-line"></span><p>15 · 検証</p></div>
-      <div class="two-column"><div><p class="eyebrow">テストとレビュー</p><h2>修正後は<br><em>実行結果で確認しました。</em></h2></div><div class="result-panel"><strong>41</strong><span>統合テスト合格</span><hr><p>H2プレビュー環境で会員・個人チェックリスト・コミュニティ・通報・管理機能を検証しました。</p><ul><li>HTTP公開・認証ルートを確認</li><li>Oracle識別子30文字制限を確認</li><li>ブラウザ画面とコンソールエラーを確認</li></ul></div></div>
+      <div class="two-column"><div><p class="eyebrow">テストとレビュー</p><h2>修正後は<br><em>実行結果で確認しました。</em></h2></div><div class="result-panel"><strong>41</strong><span>統合テスト合格</span><hr><p>H2プレビュー環境で会員・個人チェックリスト・コミュニティ・通報・管理機能を検証しました。</p><ul><li>HTTP公開・認証・IDOR権限検証を確認</li><li>MyBatis 100% SQLマッパー移行を検証</li><li>Oracle 11g ROWNUMページ分割・CLOB変換を検証</li></ul></div></div>
       <div class="slide-footer-line"><span>検証</span><strong>16</strong></div>
     </section>
 
     <section class="slide" id="slide-17" data-title="GitHub Pages" aria-label="17. GitHub Pages">
-      <div class="slide-topline"><span class="accent-line"></span><p>16 · 静的ポートフォリオ</p></div><p class="eyebrow">GITHUB PAGES</p><h2>この発表ページは静的ファイルで、<br><em>プロジェクトの実装内容を紹介します。</em></h2>
-      <div class="pages-grid"><article><b>GitHub Pagesでできること</b><p>HTML・CSS・JavaScriptで作成した発表スライド、プロジェクト説明、画面画像とリポジトリリンクを提供します。</p></article><article><b>GitHub Pagesで実行されないこと</b><p>Spring Bootサーバー、JSPレンダリング、ログイン、Oracle DB保存などの動的機能は実際のサーバー環境で動作します。</p></article></div>
+      <div class="slide-topline"><span class="accent-line"></span><p>16 · 静的ポートフォリオ</p></div><p class="eyebrow">GITHUB PAGES &amp; PDF EXPORT</p><h2>この発表ページは静的公開され、<br><em>高解像度PDFとしても出力できます。</em></h2>
+      <div class="pages-grid"><article><b>GitHub Pages での閲覧</b><p>HTML・CSS・JavaScriptで構築した発表スライドをWeb上でインタラクティブに操作可能です。</p></article><article><b>PDF エクスポート対応</b><p>印刷スタイル(@media print)に対応。ブラウザで [Ctrl + P] を押すだけで、全18枚の16:9横向き高画質PDFとして保存できます。</p><div class="badge-chip">Ctrl + P でPDF保存可能</div></article></div>
       <div class="slide-footer-line"><span>静的ポートフォリオ</span><strong>17</strong></div>
     </section>
 

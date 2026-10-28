@@ -1,6 +1,631 @@
-.cover-route small:nth-of-type(1){grid-column:1}.cover-route small:nth-of-type(2){grid-column:3}.cover-route small:nth-of-type(3){grid-column:5}
+/* ==========================================================================
+   JAPAN LIFE GUIDE DECK - COMPREHENSIVE TYPOGRAPHY & CONTRAST OVERHAUL
+   Applies bold, high-contrast, crystal-clear styling across ALL 18 slides
+   ========================================================================== */
+
+/* 1. Global Typography & Windows Font Smoothing */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", "Hiragino Kaku Gothic ProN", "Meiryo", "Yu Gothic Medium", "YuGothic", "Malgun Gothic", sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  color: #142822 !important;
+}
+
+/* Slide Shell & Frame */
+.slide {
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42), 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Headings & Section Labels across all slides */
+h1, h2, h3 {
+  color: #10251f !important;
+  font-weight: 800 !important;
+}
+
+.eyebrow {
+  color: #245e50 !important;
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 2px !important;
+}
+
+.lead, .small-lead {
+  color: #1a3028 !important;
+  font-weight: 600 !important;
+  line-height: 1.7 !important;
+}
+
+/* Slide topline category */
+.slide-topline p {
+  color: #bd4637 !important;
+  font-weight: 800 !important;
+  letter-spacing: 2px !important;
+  font-size: 11.5px !important;
+}
+
+/* Slide footer metadata */
+.slide-footer-line {
+  color: #3b5044 !important;
+  font-weight: 700 !important;
+  border-top: 1.5px solid #d4cbb4 !important;
+}
+.slide-footer-line strong {
+  color: #bd4637 !important;
+  font-weight: 900 !important;
+  font-size: 14px !important;
+}
+
+/* ==========================================================================
+   2. SLIDE 1: Cover Slide
+   ========================================================================== */
+.cover-route {
+  background: #ffffff !important;
+  border: 1.5px solid #d0c5ab !important;
+  box-shadow: 0 8px 24px rgba(24, 58, 56, 0.06) !important;
+}
+.cover-route small {
+  color: #1a3028 !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  margin-top: 12px !important;
+}
+.cover-route small:nth-of-type(1){grid-column:1}
+.cover-route small:nth-of-type(2){grid-column:3}
+.cover-route small:nth-of-type(3){grid-column:5}
 @media(max-width:900px){.cover-layout{grid-template-columns:1fr}.cover-route{max-width:620px}}
 
+/* ==========================================================================
+   3. SLIDE 2: Problem & Mission Copy Panel
+   ========================================================================== */
+.copy-panel {
+  padding: 32px !important;
+  border-left: 5px solid var(--green) !important;
+  border-top: 1px solid #d4cbb4 !important;
+  border-right: 1px solid #d4cbb4 !important;
+  border-bottom: 1px solid #d4cbb4 !important;
+  background: #ffffff !important;
+  border-radius: 0 16px 16px 0 !important;
+  box-shadow: 0 8px 24px rgba(24, 58, 56, 0.06) !important;
+}
+.copy-panel p {
+  color: #152923 !important;
+  font-size: 16.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.85 !important;
+  margin-bottom: 16px !important;
+}
+.copy-panel p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* ==========================================================================
+   4. CARD GRIDS: Scope (Slide 3), Stack (Slide 4), Language (Slide 7),
+      Safety (Slide 12), Admin (Slide 13), Pages (Slide 17)
+   ========================================================================== */
+.scope-grid article,
+.stack-grid article,
+.language-grid article,
+.admin-grid article,
+.pages-grid article,
+.safety-grid article,
+.db-grid article,
+.calendar-demo {
+  background: #ffffff !important;
+  border: 1px solid #dcd3be !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 16px rgba(24, 58, 56, 0.05) !important;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.scope-grid article:hover,
+.stack-grid article:hover,
+.language-grid article:hover,
+.admin-grid article:hover,
+.pages-grid article:hover,
+.safety-grid article:hover,
+.db-grid article:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 10px 24px rgba(24, 58, 56, 0.1) !important;
+  border-color: #245e50 !important;
+}
+
+/* Top Accent Line on Cards */
+.stack-grid article::before,
+.scope-grid article::before,
+.language-grid article::before,
+.admin-grid article::before,
+.pages-grid article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #245e50, #c69732);
+}
+
+.safety-grid article::before,
+.db-grid article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #bd4637, #c69732);
+}
+
+/* Bold Card Titles & Subtitles */
+.stack-grid article strong,
+.scope-grid article h3,
+.language-grid article strong,
+.admin-grid article strong,
+.pages-grid article b {
+  color: #10241e !important;
+  font-weight: 800 !important;
+}
+
+.stack-grid article span,
+.scope-grid article span,
+.language-grid article span,
+.admin-grid article span {
+  color: #bd4637 !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+}
+
+/* Bold and Legible Card Descriptions */
+.stack-grid article p,
+.scope-grid article p,
+.language-grid article p,
+.admin-grid article p,
+.pages-grid article p,
+.safety-grid article p {
+  color: #1a3028 !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  line-height: 1.65 !important;
+}
+
+.safety-grid article b {
+  color: #bd4637 !important;
+  font-weight: 800 !important;
+  font-size: 16px !important;
+}
+
+/* ==========================================================================
+   5. SLIDE 5: Request Processing Flow Row
+   ========================================================================== */
+.flow-row article {
+  background: #ffffff !important;
+  border: 1px solid #cad6c6 !important;
+  box-shadow: 0 4px 14px rgba(24, 58, 56, 0.05) !important;
+  transition: transform 0.2s ease !important;
+}
+.flow-row article:hover {
+  transform: translateY(-2px) !important;
+  border-color: #245e50 !important;
+}
+.flow-row article strong {
+  color: #10251f !important;
+  font-weight: 800 !important;
+  font-size: 15px !important;
+}
+.flow-row article span {
+  color: #2b453b !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}
+.flow-row i {
+  color: #245e50 !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+}
+.bottom-note {
+  color: #1a3028 !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  margin-top: 24px !important;
+}
+
+/* ==========================================================================
+   6. SLIDE 6: Procedure Card Demo (High-Contrast Fix)
+   ========================================================================== */
+.procedure-card-demo {
+  background: #ffffff !important;
+  border: 1.5px solid #c5d4c1 !important;
+  color: #142822 !important;
+  box-shadow: 0 8px 28px rgba(24, 58, 56, 0.08) !important;
+  border-radius: 16px !important;
+  padding: 28px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.procedure-card-demo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #245e50, #c69732);
+}
+.procedure-card-demo > div {
+  border-bottom: 1.5px solid #e2ebe0 !important;
+  padding-bottom: 16px !important;
+}
+.procedure-card-demo b {
+  display: block !important;
+  margin-top: 12px !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #102620 !important;
+  letter-spacing: -0.5px !important;
+}
+.procedure-card-demo p {
+  margin: 8px 0 0 !important;
+  color: #245e50 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+}
+.procedure-card-demo ol {
+  margin: 20px 0 0 !important;
+  padding-left: 24px !important;
+  color: #142822 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+.procedure-card-demo ol li {
+  color: #142822 !important;
+  font-weight: 600 !important;
+  padding: 8px 0 !important;
+  line-height: 1.5 !important;
+}
+.procedure-card-demo ol li::marker {
+  color: #245e50 !important;
+  font-weight: 800 !important;
+}
+.procedure-card-demo .mini-tag {
+  background: #e2eedc !important;
+  color: #245e50 !important;
+  font-weight: 800 !important;
+  border: 1px solid #b6d3b1 !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+  font-size: 11px !important;
+}
+
+/* ==========================================================================
+   7. SLIDE 8: Account Steps
+   ========================================================================== */
+.account-steps > div {
+  background: #ffffff !important;
+  border: 1px solid #dcd3be !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(24, 58, 56, 0.05) !important;
+  padding: 18px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.account-steps > div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #bd4637, #c69732);
+}
+.account-steps b {
+  color: #bd4637 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+.account-steps span {
+  color: #10251f !important;
+  font-weight: 800 !important;
+  font-size: 16px !important;
+  margin: 8px 0 4px !important;
+}
+.account-steps small {
+  color: #1a3028 !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+/* ==========================================================================
+   8. SLIDE 9: Check Demo (Personal Checklist)
+   ========================================================================== */
+.check-demo {
+  background: #ffffff !important;
+  border: 1.5px solid #c9d5c2 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(24, 58, 56, 0.06) !important;
+  padding: 28px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.check-demo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #245e50, #c69732);
+}
+.check-demo p {
+  color: #10251f !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+  margin-bottom: 16px !important;
+}
+.check-demo label {
+  color: #1a3028 !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 10px 0 !important;
+  border-top: 1px solid #e6eedf !important;
+}
+.check-demo i {
+  width: 20px !important;
+  height: 20px !important;
+  border: 1.5px solid #245e50 !important;
+  color: #245e50 !important;
+  font-weight: 800 !important;
+}
+.check-demo b {
+  background: #e2eedc !important;
+  color: #245e50 !important;
+  font-weight: 800 !important;
+  border: 1px solid #b6d3b1 !important;
+  font-size: 11px !important;
+  padding: 6px 14px !important;
+  margin-top: 18px !important;
+}
+
+/* ==========================================================================
+   9. SLIDE 10: Calendar Demo
+   ========================================================================== */
+.calendar-demo {
+  background: #ffffff !important;
+  border: 1.5px solid #c9d5c2 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(24, 58, 56, 0.06) !important;
+  padding: 22px !important;
+}
+.calendar-demo header strong {
+  color: #10251f !important;
+  font-weight: 800 !important;
+  font-size: 17px !important;
+}
+.calendar-demo header b {
+  border: 1px solid #c8d5c4 !important;
+  color: #10251f !important;
+  font-weight: 800 !important;
+}
+.calendar-demo .week {
+  color: #245e50 !important;
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+  margin-bottom: 6px !important;
+}
+.calendar-demo .days i {
+  background: #f1f7ef !important;
+  color: #162e26 !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  border-radius: 8px !important;
+}
+.calendar-demo .days .event {
+  background: #245e50 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+.calendar-demo .days .event b {
+  background: #bd4637 !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+}
+
+/* ==========================================================================
+   10. SLIDE 11: Community Demo
+   ========================================================================== */
+.community-demo article {
+  border: 1.5px solid #d4c8b0 !important;
+  box-shadow: 0 8px 24px rgba(24, 58, 56, 0.08) !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  padding: 26px !important;
+}
+.community-demo article small {
+  color: #245e50 !important;
+  font-weight: 800 !important;
+  font-size: 12px !important;
+}
+.community-demo article h3 {
+  color: #10251f !important;
+  font-weight: 800 !important;
+  font-size: 22px !important;
+}
+.community-demo article p {
+  color: #1a3028 !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+.community-demo article footer {
+  border-top: 1px solid #e8e0cc !important;
+  color: #3b5247 !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+}
+.community-demo aside {
+  background: #f4f8f2 !important;
+  border: 1px solid #d0decb !important;
+  color: #1a3028 !important;
+  font-size: 12.5px !important;
+}
+.community-demo aside b {
+  color: #164e42 !important;
+  font-weight: 800 !important;
+  font-size: 13.5px !important;
+}
+.community-demo aside span {
+  font-weight: 600 !important;
+  color: #20352b !important;
+}
+.community-demo aside span:first-of-type {
+  background: #dcebd5 !important;
+  color: #164e42 !important;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   11. SLIDE 14: Database Design Grid
+   ========================================================================== */
+.db-grid article {
+  background: #ffffff !important;
+  border: 1px solid #dcd3be !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+}
+.db-grid article b {
+  color: #164e42 !important;
+  font-weight: 800 !important;
+  font-size: 16.5px !important;
+  margin-bottom: 8px !important;
+}
+.db-grid article span {
+  color: #1c3028 !important;
+  font-weight: 600 !important;
+  font-size: 12.5px !important;
+  line-height: 1.6 !important;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace !important;
+}
+
+/* ==========================================================================
+   12. SLIDE 15: Security & Integrity List
+   ========================================================================== */
+.security-list > div {
+  background: #ffffff !important;
+  border: 1px solid #dcd3be !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 14px rgba(24, 58, 56, 0.04) !important;
+  padding: 18px !important;
+}
+.security-list strong {
+  color: #bd4637 !important;
+  font-weight: 800 !important;
+  font-size: 15px !important;
+}
+.security-list span {
+  color: #1a3028 !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+}
+
+/* ==========================================================================
+   13. SLIDE 16: Verification & Result Panel
+   ========================================================================== */
+.result-panel {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid #366059 !important;
+  border-radius: 16px !important;
+  padding: 32px !important;
+}
+.result-panel > strong {
+  color: #daf0b0 !important;
+  font-size: 68px !important;
+  font-weight: 900 !important;
+}
+.result-panel > span {
+  color: #ffffff !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+}
+.result-panel p,
+.result-panel li {
+  color: #e6f2ec !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.65 !important;
+}
+.result-panel ul li {
+  padding: 3px 0 !important;
+}
+
+/* ==========================================================================
+   14. SLIDE 18: Closing & Q&A
+   ========================================================================== */
+.thanks {
+  color: #10241e !important;
+  font-weight: 800 !important;
+  font-size: 18px !important;
+}
+.closing > strong {
+  color: #bd4637 !important;
+  font-size: 38px !important;
+  font-weight: 900 !important;
+}
+
+/* ==========================================================================
+   15. Shared Components: Pills, Chips & Controls
+   ========================================================================== */
+.tag-list span,
+.feature-pills span {
+  background: #edf5eb !important;
+  color: #1b4a3e !important;
+  border: 1px solid #bddbb9 !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+}
+
+.badge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 99px;
+  background: #edf5eb;
+  color: #245e50;
+  border: 1px solid #c2dcc0;
+  margin-top: 8px;
+}
+.badge-chip.orange {
+  background: #fdf3eb;
+  color: #bd4637;
+  border-color: #f1cfb8;
+}
+.badge-chip.blue {
+  background: #eef5fc;
+  color: #1a629b;
+  border-color: #b7d7f7;
+}
+
+.deck-controls span {
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+}
+.keyboard-help {
+  color: #bec7be !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+
+/* ==========================================================================
+   16. Print & PDF Export Overrides
+   ========================================================================== */
 @media print {
   @page {
     size: landscape;
