@@ -42,7 +42,7 @@ public class CommunityService {
         }
         Filter filter = filter(category, query);
         int offset = (page - 1) * pageSize;
-        return mapper.findPosts(filter.category(), filter.query(), offset, pageSize);
+        return normalizeClobs(mapper.findPosts(filter.category(), filter.query(), offset, pageSize));
     }
 
     public int countPosts(String category, String query) {
@@ -70,7 +70,7 @@ public class CommunityService {
         if (post == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return post;
+        return normalizeClob(post);
     }
 
     public Map<String, Object> editablePost(String login, long id) {
@@ -79,11 +79,11 @@ public class CommunityService {
         if (post == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return post;
+        return normalizeClob(post);
     }
 
     public List<Map<String, Object>> comments(long postId) {
-        return mapper.findComments(postId);
+        return normalizeClobs(mapper.findComments(postId));
     }
 
     public List<Map<String, Object>> images(long postId) {
@@ -119,7 +119,7 @@ public class CommunityService {
 
     public List<Map<String, Object>> bookmarks(String login) {
         Member member = member(login);
-        return mapper.findBookmarks(member.getId());
+        return normalizeClobs(mapper.findBookmarks(member.getId()));
     }
 
     private String text(String value, int max) {
@@ -280,12 +280,33 @@ public class CommunityService {
     }
 
     public List<Map<String, Object>> reports() {
-        return mapper.findReports();
+        return normalizeClobs(mapper.findReports());
     }
 
     public List<Map<String, Object>> adminPosts(String category, String query) {
         Filter filter = filter(category, query);
-        return mapper.findAdminPosts(filter.category(), filter.query());
+        return normalizeClobs(mapper.findAdminPosts(filter.category(), filter.query()));
+    }
+
+    private Map<String, Object> normalizeClob(Map<String, Object> map) {
+        if (map == null) return null;
+        map.replaceAll((k, v) -> {
+            if (v instanceof java.sql.Clob clob) {
+                try {
+                    return clob.getSubString(1, (int) clob.length());
+                } catch (Exception e) {
+                    return v.toString();
+                }
+            }
+            return v;
+        });
+        return map;
+    }
+
+    private List<Map<String, Object>> normalizeClobs(List<Map<String, Object>> list) {
+        if (list == null) return List.of();
+        list.forEach(this::normalizeClob);
+        return list;
     }
 
     @Transactional
