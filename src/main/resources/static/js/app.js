@@ -302,4 +302,114 @@
       }
     });
   }
+
+  const bindCommentActions = () => {
+    document.querySelectorAll('[data-comment-edit-form]').forEach((form) => {
+      if (form.dataset.bound) return;
+      form.dataset.bound = 'true';
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const textarea = form.querySelector('textarea[name="body"]');
+        const newBody = textarea ? textarea.value.trim() : '';
+        if (!newBody) return;
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+
+        const body = new URLSearchParams(new FormData(form));
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+            body
+          });
+          if (!res.ok) throw new Error('Edit failed');
+          const article = form.closest('.community-comment');
+          if (article) {
+            const bodyEl = article.querySelector('.community-comment-body');
+            if (bodyEl) bodyEl.textContent = newBody;
+          }
+          const details = form.closest('details');
+          if (details) details.open = false;
+        } catch (err) {
+          form.submit();
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-comment-delete-form]').forEach((form) => {
+      if (form.dataset.bound) return;
+      form.dataset.bound = 'true';
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const confirmMsg = form.dataset.confirm || '정말 삭제하시겠습니까?';
+        if (!window.confirm(confirmMsg)) return;
+
+        const article = form.closest('.community-comment');
+        const body = new URLSearchParams(new FormData(form));
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+            body
+          });
+          if (!res.ok) throw new Error('Delete failed');
+          if (article) {
+            article.style.transition = 'opacity 0.2s, transform 0.2s';
+            article.style.opacity = '0';
+            article.style.transform = 'translateY(-10px)';
+            setTimeout(() => article.remove(), 200);
+          }
+          const countEl = document.querySelector('.community-comment-count');
+          if (countEl) {
+            const currentCount = parseInt(countEl.textContent, 10) || 1;
+            countEl.textContent = Math.max(0, currentCount - 1);
+          }
+        } catch (err) {
+          form.submit();
+        }
+      });
+    });
+
+    const createForm = document.querySelector('[data-comment-create-form]');
+    if (createForm && !createForm.dataset.bound) {
+      createForm.dataset.bound = 'true';
+      createForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const textarea = createForm.querySelector('textarea[name="body"]');
+        const text = textarea ? textarea.value.trim() : '';
+        if (!text) return;
+        const btn = createForm.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+
+        const body = new URLSearchParams(new FormData(createForm));
+        try {
+          const res = await fetch(createForm.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+            body
+          });
+          if (!res.ok) throw new Error('Comment failed');
+
+          const tempRes = await fetch(window.location.href);
+          const html = await tempRes.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newCommentsSection = doc.querySelector('.community-comments');
+          const currentCommentsSection = document.querySelector('.community-comments');
+          if (newCommentsSection && currentCommentsSection) {
+            currentCommentsSection.innerHTML = newCommentsSection.innerHTML;
+            bindCommentActions();
+          }
+        } catch (err) {
+          createForm.submit();
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      });
+    }
+  };
+
+  bindCommentActions();
 })();

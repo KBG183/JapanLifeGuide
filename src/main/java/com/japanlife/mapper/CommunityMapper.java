@@ -47,7 +47,9 @@ public interface CommunityMapper {
     Integer countOpenCommentReports(@Param("commentId") long commentId, @Param("memberId") long memberId);
     int insertCommentReport(@Param("commentId") long commentId, @Param("memberId") long memberId, @Param("reason") String reason);
     List<Map<String, Object>> findReports();
+    int countAdminPosts(@Param("category") String category, @Param("query") String query);
     List<Map<String, Object>> findAdminPosts(@Param("category") String category, @Param("query") String query);
+    List<Map<String, Object>> findAdminPostsPaged(@Param("category") String category, @Param("query") String query, @Param("offset") int offset, @Param("limit") int limit);
     int updatePostStatus(@Param("id") long id, @Param("status") String status);
     Map<String, Object> findReportById(long id);
     String findPostStatus(long id);

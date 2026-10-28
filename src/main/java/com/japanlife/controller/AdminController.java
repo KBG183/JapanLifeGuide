@@ -52,7 +52,24 @@ public class AdminController {
     @GetMapping("/admin/reports")
     public String reports(Model model) { model.addAttribute("reports", community.reports()); return "admin/reports"; }
     @GetMapping("/admin/community")
-    public String communityPosts(@RequestParam(defaultValue="") String category, @RequestParam(defaultValue="") String q, Model model) { model.addAttribute("posts", community.adminPosts(category, q)); model.addAttribute("category", category); model.addAttribute("q", q); return "admin/community"; }
+    public String communityPosts(@RequestParam(defaultValue = "") String category,
+                                 @RequestParam(defaultValue = "") String q,
+                                 @RequestParam(defaultValue = "1") int page,
+                                 Model model) {
+        int safePage = Math.max(page, 1);
+        int pageSize = 10;
+        int total = community.countAdminPosts(category, q);
+        int pages = Math.max(1, (total + pageSize - 1) / pageSize);
+        if (safePage > pages) safePage = pages;
+
+        model.addAttribute("posts", community.adminPosts(category, q, safePage, pageSize));
+        model.addAttribute("category", category);
+        model.addAttribute("q", q);
+        model.addAttribute("page", safePage);
+        model.addAttribute("pages", pages);
+        model.addAttribute("total", total);
+        return "admin/community";
+    }
     @PostMapping("/admin/community/posts/{id}/status")
     public String updateCommunityPostStatus(@PathVariable long id, @RequestParam String status) { community.updatePostStatus(id, status); return "redirect:/admin/community?updated"; }
     @PostMapping("/admin/reports/{id}/moderate")

@@ -7,6 +7,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,11 +22,13 @@ public class CommunityService {
     private static final List<String> TYPES = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
     private final CommunityMapper mapper;
     private final MemberService members;
-    private final Path uploadDir = Path.of("community-uploads").toAbsolutePath().normalize();
+    private final Path uploadDir;
 
-    public CommunityService(CommunityMapper mapper, MemberService members) {
+    public CommunityService(CommunityMapper mapper, MemberService members,
+            @Value("${app.upload.dir:community-uploads}") String uploadPath) {
         this.mapper = mapper;
         this.members = members;
+        this.uploadDir = Path.of(uploadPath).toAbsolutePath().normalize();
     }
 
     public List<Map<String, Object>> posts(String category) {
@@ -283,9 +286,20 @@ public class CommunityService {
         return normalizeClobs(mapper.findReports());
     }
 
+    public int countAdminPosts(String category, String query) {
+        Filter filter = filter(category, query);
+        return mapper.countAdminPosts(filter.category(), filter.query());
+    }
+
     public List<Map<String, Object>> adminPosts(String category, String query) {
         Filter filter = filter(category, query);
         return normalizeClobs(mapper.findAdminPosts(filter.category(), filter.query()));
+    }
+
+    public List<Map<String, Object>> adminPosts(String category, String query, int page, int pageSize) {
+        Filter filter = filter(category, query);
+        int offset = (page - 1) * pageSize;
+        return normalizeClobs(mapper.findAdminPostsPaged(filter.category(), filter.query(), offset, pageSize));
     }
 
     private Map<String, Object> normalizeClob(Map<String, Object> map) {

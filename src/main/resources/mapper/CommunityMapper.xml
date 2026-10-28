@@ -243,6 +243,21 @@
     ORDER BY r.id DESC
   </select>
 
+  <select id="countAdminPosts" resultType="int">
+    SELECT COUNT(*)
+    FROM JL_COMMUNITY_POST p
+    JOIN JL_MEMBER m ON m.id = p.member_id
+    <where>
+      <if test="category != null and category != ''">
+        AND p.category = #{category}
+      </if>
+      <if test="query != null and query != ''">
+        AND (LOWER(p.title) LIKE LOWER('%' || #{query} || '%')
+             OR LOWER(p.body) LIKE LOWER('%' || #{query} || '%'))
+      </if>
+    </where>
+  </select>
+
   <select id="findAdminPosts" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
     SELECT p.id, p.category, p.title, p.status, p.created_at, p.updated_at, p.view_count, m.login_id,
            (SELECT COUNT(*) FROM JL_COMMUNITY_COMMENT c WHERE c.post_id = p.id AND c.status = 'ACTIVE') AS comment_count,
@@ -259,6 +274,29 @@
       </if>
     </where>
     ORDER BY p.id DESC
+  </select>
+
+  <select id="findAdminPostsPaged" resultType="org.springframework.util.LinkedCaseInsensitiveMap">
+    SELECT id, category, title, status, created_at, updated_at, view_count, login_id, comment_count, like_count
+    FROM (
+      SELECT p.id, p.category, p.title, p.status, p.created_at, p.updated_at, p.view_count, m.login_id,
+             (SELECT COUNT(*) FROM JL_COMMUNITY_COMMENT c WHERE c.post_id = p.id AND c.status = 'ACTIVE') AS comment_count,
+             (SELECT COUNT(*) FROM JL_COMMUNITY_LIKE l WHERE l.post_id = p.id) AS like_count,
+             ROW_NUMBER() OVER (ORDER BY p.id DESC) AS rn
+      FROM JL_COMMUNITY_POST p
+      JOIN JL_MEMBER m ON m.id = p.member_id
+      <where>
+        <if test="category != null and category != ''">
+          AND p.category = #{category}
+        </if>
+        <if test="query != null and query != ''">
+          AND (LOWER(p.title) LIKE LOWER('%' || #{query} || '%')
+               OR LOWER(p.body) LIKE LOWER('%' || #{query} || '%'))
+        </if>
+      </where>
+    )
+    WHERE rn &gt; #{offset} AND rn &lt;= #{offset} + #{limit}
+    ORDER BY rn
   </select>
 
   <update id="updatePostStatus">

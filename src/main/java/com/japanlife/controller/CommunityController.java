@@ -59,7 +59,10 @@ public class CommunityController {
     }
 
     @GetMapping("/community/write")
-    public String write() {
+    public String write(Model model) {
+        if (!model.containsAttribute("form")) {
+            model.addAttribute("form", new CommunityPostForm());
+        }
         return "community/write";
     }
 
@@ -71,36 +74,54 @@ public class CommunityController {
     }
 
     @PostMapping("/community/write")
-    public String create(@Valid @ModelAttribute CommunityPostForm form,
+    public String create(@Valid @ModelAttribute("form") CommunityPostForm form,
                          BindingResult bindingResult,
                          @RequestParam(required = false) MultipartFile[] images,
-                         Principal principal) {
+                         Principal principal,
+                         Model model) {
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("invalid post form");
+            model.addAttribute("formError", true);
+            return "community/write";
         }
         long id = service.create(principal.getName(), form.getCategory(), form.getTitle(), form.getBody(), images);
         return "redirect:/community/" + id;
     }
 
     @PostMapping("/community/{id}/comments")
-    public String comment(@PathVariable long id,
+    public Object comment(@PathVariable long id,
                           @Valid @ModelAttribute CommentForm form,
                           BindingResult bindingResult,
+                          @RequestHeader(value = "Accept", required = false) String accept,
                           Principal principal) {
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("invalid comment form");
+            if (accept != null && accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "error", "Invalid comment"));
+            }
+            return "redirect:/community/" + id + "?commentError=true";
         }
         service.comment(principal.getName(), id, form.getBody());
+        if (accept != null && accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            return ResponseEntity.ok(Map.of("success", true));
+        }
         return "redirect:/community/" + id;
     }
 
     @PostMapping("/community/{id}/edit")
     public String update(@PathVariable long id,
-                         @Valid @ModelAttribute CommunityPostForm form,
+                         @Valid @ModelAttribute("form") CommunityPostForm form,
                          BindingResult bindingResult,
-                         Principal principal) {
+                         Principal principal,
+                         Model model) {
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("invalid edit form");
+            model.addAttribute("formError", true);
+            model.addAttribute("post", Map.of(
+                "id", id,
+                "category", form.getCategory() == null ? "GENERAL" : form.getCategory(),
+                "title", form.getTitle() == null ? "" : form.getTitle(),
+                "body", form.getBody() == null ? "" : form.getBody()
+            ));
+            model.addAttribute("currentMemberId", service.memberId(principal.getName()));
+            return "community/edit";
         }
         service.updatePost(principal.getName(), id, form.getCategory(), form.getTitle(), form.getBody());
         return "redirect:/community/" + id;
@@ -133,17 +154,27 @@ public class CommunityController {
     }
 
     @PostMapping("/community/comments/{id}/delete")
-    public String deleteComment(@PathVariable long id, @RequestParam long postId, Principal principal) {
+    public Object deleteComment(@PathVariable long id,
+                                @RequestParam long postId,
+                                @RequestHeader(value = "Accept", required = false) String accept,
+                                Principal principal) {
         service.deleteComment(principal.getName(), id);
+        if (accept != null && accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            return ResponseEntity.ok(Map.of("success", true, "id", id));
+        }
         return "redirect:/community/" + postId;
     }
 
     @PostMapping("/community/comments/{id}/edit")
-    public String updateComment(@PathVariable long id,
+    public Object updateComment(@PathVariable long id,
                                 @RequestParam long postId,
                                 @RequestParam String body,
+                                @RequestHeader(value = "Accept", required = false) String accept,
                                 Principal principal) {
         service.updateComment(principal.getName(), id, postId, body);
+        if (accept != null && accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            return ResponseEntity.ok(Map.of("success", true, "id", id, "body", body));
+        }
         return "redirect:/community/" + postId;
     }
 
